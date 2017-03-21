@@ -1,5 +1,10 @@
 #include "Date.h"
 
+/**
+ * Converts a t_date type in julian date
+ * @param  date t_date date
+ * @return      int - an integer representing a julian date
+ */
 int get_julian_date(t_date date)
 {
   int a = (int)((14 - date.month)/12);
@@ -9,11 +14,23 @@ int get_julian_date(t_date date)
   return (date.day + (int)((153 * m + 2)/5) + 365 * y + (int)(y / 4) - (int)(y / 100) + (int)(y / 400) - 32045);
 }
 
+/**
+ * Returns the number of days between two dates
+ * @param  date1 t_date - one of the dates given as argument
+ * @param  date2 t_date - one of the dates given as argument
+ * @return       int - number of days between the two days
+ */
 int get_days_between(t_date date1, t_date date2)
 {
   return (get_julian_date(date2) - get_julian_date(date1));
 }
 
+/**
+ * Checks if the date of a product expires in x days
+ * @param  date t_date - the date of a product
+ * @param  x    the number of days in which to check if the product expires
+ * @return      1 - if it expires; 2 - if it does not expire
+ */
 int expires_soon(t_date date, int x)
 {
   time_t the_time = time(NULL);
@@ -29,6 +46,28 @@ int expires_soon(t_date date, int x)
   return 0;
 }
 
+void test_get_julian_date()
+{
+  assert(1);
+}
+
+void test_get_days_between()
+{
+  assert(1);
+}
+
+void test_expires_soon()
+{
+  assert(1);
+}
+
+void test_date()
+{
+  test_get_julian_date();
+  test_get_days_between();
+  test_expires_soon();
+}
+//------------Unsuccessful attempts-----------------
 // int get_days_between(t_date d1, t_date d2)
 // {
 //   int aux;

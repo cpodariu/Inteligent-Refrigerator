@@ -1,9 +1,15 @@
 #include "ProductUi.h"
 
+void make_tests()
+{
+  tests_product_repo();
+  test_controller();
+  test_date();
+}
+
 int main()
 {
-  //tests_product_repo();
-  //test_controller();
+  make_tests();
 
   t_product_repo *repo = create_repo();
   t_product_ctrl *ctrl = create_ctrl(repo);
