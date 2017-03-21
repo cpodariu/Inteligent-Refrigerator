@@ -1,0 +1,26 @@
+#include "ProductUi.h"
+
+int main()
+{
+  //tests_product_repo();
+  //test_controller();
+
+  t_product_repo *repo = create_repo();
+  t_product_ctrl *ctrl = create_ctrl(repo);
+
+  add_product_c(ctrl, (char*)"Milk", (char*)"dairy", 10, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Chocolate", (char*)"sweets", 5, 3, 2, 2017);
+  add_product_c(ctrl, (char*)"Milk", (char*)"dairy", 5, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Apple", (char*)"fruit", 3, 3, 3, 2017);
+  add_product_c(ctrl, (char*)"Candy", (char*)"sweets", 10, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Cake", (char*)"sweets", 15, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Cupcake", (char*)"sweets", 20, 10, 10, 2028);
+  add_product_c(ctrl, (char*)"Cheese", (char*)"dairy", 100, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Orange", (char*)"fruit", 5, 3, 3, 2017);
+  add_product_c(ctrl, (char*)"Pear", (char*)"fruit", 1, 3, 3, 2017);
+
+
+  t_product_ui *ui = create_ui(ctrl);
+  start_ui(ui);
+  return 0;
+}
