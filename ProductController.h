@@ -19,5 +19,6 @@ void test_add_c();
 void test_sort_repo();
 void test_controller();
 void print_reverse_by_category_ctrl(t_product *p, char *category);
+t_product *get_products_c(t_product_ctrl *c);
 
 #endif /* end of include guard: CONTROLLER_H */

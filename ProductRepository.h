@@ -18,7 +18,7 @@ int remove_product(t_product_repo *v, char* name);
 void init_product_repo_test(t_product_repo *v);
 void test_add();
 void tests_product_repo();
-
+t_product *get_products(t_product_repo *r);
 
 
 #endif /* end of include guard: PRODUCTREPOSITORY_H*/

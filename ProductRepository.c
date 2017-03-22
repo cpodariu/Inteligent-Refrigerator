@@ -13,6 +13,11 @@ t_product_repo *create_repo()
   return v;
 }
 
+t_product *get_products(t_product_repo *r)
+{
+  return (r->products);
+}
+
 
 /**
  * Frees a repo from memory
@@ -76,7 +81,7 @@ void add_product_r(t_product_repo *v, t_product *p)
     v->products = p;
     v->length++;
 }
-// 
+//
 // void add_product_r_2(t_product_repo *v, t_product *p)
 // {
 //   t_product *prod;

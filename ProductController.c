@@ -13,6 +13,10 @@ t_product_ctrl *create_ctrl(t_product_repo *r)
   return c;
 }
 
+t_product *get_products_c(t_product_ctrl *c){
+  return get_products(c->repo);
+}
+
 /**
  * Takes a controller and frees the memory from it
  * @param c the controller to be freed
