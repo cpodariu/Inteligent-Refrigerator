@@ -14,7 +14,7 @@ int main()
   t_product_repo *repo = create_repo();
   t_product_ctrl *ctrl = create_ctrl(repo);
 
-  add_product_c(ctrl, (char*)"Milk", (char*)"dairy", 10, 1, 1, 2018);
+  add_product_c(ctrl, (char*)"Milk", (char*)"dairy", 25, 25, 3, 2017);
   add_product_c(ctrl, (char*)"Chocolate", (char*)"sweets", 5, 3, 2, 2017);
   add_product_c(ctrl, (char*)"Milk", (char*)"dairy", 5, 1, 1, 2018);
   add_product_c(ctrl, (char*)"Apple", (char*)"fruit", 3, 3, 3, 2017);

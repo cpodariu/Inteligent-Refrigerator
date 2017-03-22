@@ -1,4 +1,4 @@
-#include "ProductUi.h"
+ #include "ProductUi.h"
 
 t_product_ui *create_ui(t_product_ctrl *c)
 {
@@ -55,14 +55,34 @@ void print_fridge(t_product_ui *ui)
 
 void print_soon_to_expire(t_product_ui *ui)
 {
-  //char *command;
+  char *command;
   t_product *p = get_products_c(ui->ctrl);
-  //command = (char*)malloc(sizeof(char) * 100);
+  command = (char*)malloc(sizeof(char) * 100);
   int days;
   char *line;
 
   line = (char*)malloc(sizeof(char) * 100);
   scanf("%i", &days);
+
+  fgets(command, 99, stdin);
+
+  if (command[0] != '\n')
+  {
+    command[strcspn(command, "\r\n")] = 0;
+    while(*command == ' ')
+      command++;
+
+    while(p != NULL)
+    {
+      if (expires_soon(p->date, days) && (strstr(p->category, command) != NULL))
+      {
+        to_string(p, line);
+        printf("%s", line);
+      }
+      p = p->next;
+    }
+  }
+
   while(p != NULL)
   {
     if (expires_soon(p->date, days))
