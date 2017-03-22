@@ -18,7 +18,6 @@ t_product *get_products(t_product_repo *r)
   return (r->products);
 }
 
-
 /**
  * Frees a repo from memory
  * @param v the repo to be freed

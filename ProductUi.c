@@ -39,7 +39,7 @@ void print_menu()
 
 void print_fridge(t_product_ui *ui)
 {
-  t_product *p = ui->ctrl->repo->products;
+  t_product *p = get_products_c(ui->ctrl);
   char *line;
   line = (char*)malloc(sizeof(char) * 200);
 
@@ -53,11 +53,32 @@ void print_fridge(t_product_ui *ui)
   //free(line);
 }
 
+void print_soon_to_expire(t_product_ui *ui)
+{
+  //char *command;
+  t_product *p = get_products_c(ui->ctrl);
+  //command = (char*)malloc(sizeof(char) * 100);
+  int days;
+  char *line;
+
+  line = (char*)malloc(sizeof(char) * 100);
+  scanf("%i", &days);
+  while(p != NULL)
+  {
+    if (expires_soon(p->date, days))
+    {
+      to_string(p, line);
+      printf("%s", line);
+    }
+    p = p->next;
+  }
+}
+
 void print_fridge2(t_product_ui *ui)
 {
   char *command;
   char *line;
-  t_product *p = ui->ctrl->repo->products;
+  t_product *p = get_products_c(ui->ctrl);
 
   command = (char*)malloc(sizeof(char) * 100);
   line = (char*)malloc(sizeof(char) * 100);
@@ -122,13 +143,14 @@ void update_ui(t_product_ui *ui)
 
 void print_reverse_by_category_ui(t_product_ui *ui)
 {
-  t_product *p = ui->ctrl->repo->products;
+  t_product *p = get_products_c(ui->ctrl);
   char *category;
 
   category = (char*)malloc(sizeof(char) * 50);
   scanf("%s", category);
   print_reverse_by_category_ctrl(p, category);
 }
+
 
 void start_ui(t_product_ui *ui)
 {
@@ -154,5 +176,7 @@ void start_ui(t_product_ui *ui)
       print_menu();
     if (!strcmp(command, "magic"))
       print_reverse_by_category_ui(ui);
+    if (!strcmp(command, "expires"))
+      print_soon_to_expire(ui);
   }
 }
