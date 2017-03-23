@@ -8,6 +8,7 @@ t_product_repo *create_repo()
 {
   t_product_repo *v = (t_product_repo*)malloc(sizeof(t_product_repo));
   v->products = NULL;
+  v->opr = NULL;
   v->length = 0;
 
   return v;
@@ -79,6 +80,26 @@ void add_product_r(t_product_repo *v, t_product *p)
     p->next = v->products;
     v->products = p;
     v->length++;
+
+    t_opr *opr = init_opr();
+    add_opr(opr, p, "add");
+    if (v->opr == NULL)
+    {
+      v->opr = opr;
+    }
+    else if (v->opr->prev == NULL)
+    {
+      v->opr->prev = opr;
+      opr->next = v->opr;
+      v->opr = opr;
+    }
+    else
+    {
+      free_all_opr_left(v->opr->prev);
+      v->opr->prev = opr;
+      opr->next = v->opr;
+      v->opr = opr;
+    }
 }
 //
 // void add_product_r_2(t_product_repo *v, t_product *p)
@@ -121,6 +142,10 @@ int remove_product(t_product_repo *v, char* name)
     return 0;
   if (!strcmp(p->name, name))
   {
+
+    t_opr *opr = init_opr();
+    add_opr(opr, p, "remove");
+
     free_product(p);
     v->products = v->products->next;
     v->length-=1;
@@ -130,8 +155,14 @@ int remove_product(t_product_repo *v, char* name)
   {
     if (!strcmp(p->next->name, name))
     {
+
       aux = p->next;
       p->next = p->next->next;
+
+      t_opr *opr = init_opr();
+      add_opr(opr, aux, "remove");
+
+      free_product(aux);
       free(aux);
       v->length -= 1;
       return 1;

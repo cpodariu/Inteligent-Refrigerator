@@ -1,11 +1,23 @@
 #ifndef PRODUCTREPOSITORY_H
 #define PRODUCTREPOSITORY_H
+
 #include "Product.h"
 #include <assert.h>
+
+typedef struct s_opr{
+  char *cmd;
+  char *name;
+  char *category;
+  int quantity;
+  t_date date;
+  struct s_opr *next;
+  struct s_opr *prev;
+} t_opr;
 
 typedef struct
 {
   t_product *products;
+  t_opr *opr;
   int length;
 } t_product_repo;
 
@@ -20,5 +32,11 @@ void test_add();
 void tests_product_repo();
 t_product *get_products(t_product_repo *r);
 
+
+t_opr *init_opr();
+void free_opr(t_opr *opr);
+void do_opr(t_opr *opr, t_product_repo *r);
+void add_opr(t_opr *opr, t_product *p, const char *cmd);
+void free_all_opr_left(t_opr *opr);
 
 #endif /* end of include guard: PRODUCTREPOSITORY_H*/
