@@ -34,6 +34,7 @@ void do_opr(t_opr *opr, t_product_repo *r)
 {
   if (!strcmp(opr->cmd, "remove"))
   {
+    //printf ("wuut%s\n",opr->name);
     add_product_r(r, create_product(opr->name, opr->category,
     opr->quantity, opr->date.year, opr->date.month, opr->date.day), 1);
     strcpy(opr->cmd, "add");

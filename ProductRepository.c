@@ -158,7 +158,7 @@ int remove_product(t_product_repo *v, char* name, int control)
       {
         v->opr = opr;
         //if (v->opr == NULL)
-          printf("*\n");
+        //  printf("*\n");
       }
       else if (v->opr->prev == NULL)
       {
@@ -190,18 +190,20 @@ int remove_product(t_product_repo *v, char* name, int control)
       if (control == 0)
       {
         t_opr *opr = init_opr();
-        add_opr(opr, p, "remove");
+        add_opr(opr, aux, "remove");
+        //printf("%s\n", aux->name);
         if (v->opr == NULL)
         {
           v->opr = opr;
           //if (v->opr == NULL)
-            printf("*\n");
+          //  printf("*\n");
         }
         else if (v->opr->prev == NULL)
         {
           v->opr->prev = opr;
           opr->next = v->opr;
           v->opr = opr;
+          //printf("*\n");
         }
         else
         {
