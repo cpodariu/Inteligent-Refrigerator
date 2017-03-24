@@ -67,8 +67,10 @@ t_product *find(t_product_repo *v, char* name)
  * @param v the repo
  * @param p the product to be added
  */
-void add_product_r(t_product_repo *v, t_product *p)
+void add_product_r(t_product_repo *v, t_product *p, int control)
 {
+    //static int test = 0;
+  //  test++;
     t_product *prod;
   //  printf("%s\n",p->name);
     if (find(v, p->name) != NULL)
@@ -81,24 +83,30 @@ void add_product_r(t_product_repo *v, t_product *p)
     v->products = p;
     v->length++;
 
-    t_opr *opr = init_opr();
-    add_opr(opr, p, "add");
-    if (v->opr == NULL)
+    if (control == 0)
     {
-      v->opr = opr;
-    }
-    else if (v->opr->prev == NULL)
-    {
-      v->opr->prev = opr;
-      opr->next = v->opr;
-      v->opr = opr;
-    }
-    else
-    {
-      free_all_opr_left(v->opr->prev);
-      v->opr->prev = opr;
-      opr->next = v->opr;
-      v->opr = opr;
+      t_opr *opr = init_opr();
+      add_opr(opr, p, "add");
+      if (v->opr == NULL)
+      {
+        v->opr = opr;
+        //if (v->opr == NULL)
+          //printf("* %i \n", test);
+      }
+      else if (v->opr->prev == NULL)
+      {
+        v->opr->prev = opr;
+        opr->next = v->opr;
+        v->opr = opr;
+        //printf("! %i \n", test);
+      }
+      else
+      {
+        free_all_opr_left(v->opr->prev);
+        v->opr->prev = opr;
+        opr->next = v->opr;
+        v->opr = opr;
+      }
     }
 }
 //
@@ -133,7 +141,7 @@ int get_length(t_product_repo *v)
  * @param  name the name of the product to be removed
  * @return      1 - removed succesfully; 0 - product not found
  */
-int remove_product(t_product_repo *v, char* name)
+int remove_product(t_product_repo *v, char* name, int control)
 {
   t_product *p = v->products;
   t_product *aux;
@@ -142,9 +150,30 @@ int remove_product(t_product_repo *v, char* name)
     return 0;
   if (!strcmp(p->name, name))
   {
-
-    t_opr *opr = init_opr();
-    add_opr(opr, p, "remove");
+    if (control == 0)
+    {
+      t_opr *opr = init_opr();
+      add_opr(opr, p, "remove");
+      if (v->opr == NULL)
+      {
+        v->opr = opr;
+        //if (v->opr == NULL)
+          printf("*\n");
+      }
+      else if (v->opr->prev == NULL)
+      {
+        v->opr->prev = opr;
+        opr->next = v->opr;
+        v->opr = opr;
+      }
+      else
+      {
+        free_all_opr_left(v->opr->prev);
+        v->opr->prev = opr;
+        opr->next = v->opr;
+        v->opr = opr;
+      }
+    }
 
     free_product(p);
     v->products = v->products->next;
@@ -155,15 +184,35 @@ int remove_product(t_product_repo *v, char* name)
   {
     if (!strcmp(p->next->name, name))
     {
-
       aux = p->next;
       p->next = p->next->next;
 
-      t_opr *opr = init_opr();
-      add_opr(opr, aux, "remove");
+      if (control == 0)
+      {
+        t_opr *opr = init_opr();
+        add_opr(opr, p, "remove");
+        if (v->opr == NULL)
+        {
+          v->opr = opr;
+          //if (v->opr == NULL)
+            printf("*\n");
+        }
+        else if (v->opr->prev == NULL)
+        {
+          v->opr->prev = opr;
+          opr->next = v->opr;
+          v->opr = opr;
+        }
+        else
+        {
+          free_all_opr_left(v->opr->prev);
+          v->opr->prev = opr;
+          opr->next = v->opr;
+          v->opr = opr;
+        }
+      }
 
       free_product(aux);
-      free(aux);
       v->length -= 1;
       return 1;
     }
@@ -172,12 +221,30 @@ int remove_product(t_product_repo *v, char* name)
   return 0;
 }
 
+void undo(t_product_repo *v)
+{
+  if (v->opr != NULL)
+  {
+    do_opr(v->opr, v);
+    v->opr = v->opr->next;
+  }
+}
+
+void redo(t_product_repo *v)
+{
+  if (v->opr->prev != NULL)
+  {
+    do_opr(v->opr->prev, v);
+    v->opr = v->opr->prev;
+  }
+}
+
 //--------------------TESTS--------------------
 
 void init_product_repo_test(t_product_repo *v)
 {
     t_product *p = create_product((char*)"Milk", (char*)"dairy", 10, 25, 3, 2017);
-    add_product_r(v, p);
+    add_product_r(v, p, 0);
 }
 
 void test_add()
@@ -188,11 +255,11 @@ void test_add()
   assert(get_length(v) == 1);
 
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p);
+  add_product_r(v, p, 0);
   assert(get_length(v) == 2);
 
   p = create_product((char*)"Milk", (char*)"dairy", 5, 25, 3, 2017);
-  add_product_r(v, p);
+  add_product_r(v, p, 0);
   assert(get_length(v) == 2);
   assert(find(v, (char*)"Milk")->quantity == 15);
 
@@ -205,8 +272,8 @@ void test_remove()
 
   init_product_repo_test(v);
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p);
-  remove_product(v, (char*)"Cheese");
+  add_product_r(v, p, 0);
+  remove_product(v, (char*)"Cheese", 0);
   assert(get_length(v) == 1);
 }
 
@@ -216,7 +283,7 @@ void test_find()
 
   init_product_repo_test(v);
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p);
+  add_product_r(v, p, 0);
   assert(find(v, (char*)"Cheese")->quantity == 5);
 }
 

@@ -41,7 +41,7 @@ void add_product_c  (t_product_ctrl *c, char* name, char* category,
                     int quantity, int day, int month, int year)
 {
   t_product *p = create_product(name, category, quantity, day, month, year);
-  add_product_r(c->repo, p);
+  add_product_r(c->repo, p, 0);
   sort_repository(c);
 }
 
@@ -91,7 +91,7 @@ void sort_repository(t_product_ctrl *c)
  */
 int remove_product_c(t_product_ctrl *c, char *name)
 {
-  return remove_product(c->repo, name);
+  return remove_product(c->repo, name, 0);
 }
 
 void print_reverse_by_category_ctrl(t_product *p, char *category)
@@ -106,6 +106,20 @@ void print_reverse_by_category_ctrl(t_product *p, char *category)
     to_string(p, str);
     printf("%s\n", str);
   }
+}
+
+void undo_c(t_product_ctrl *c)
+{
+  undo(c->repo);
+  sort_repository(c);
+
+}
+
+void redo_c(t_product_ctrl *c)
+{
+  redo(c->repo);
+  sort_repository(c);
+
 }
 
 //----------------TESTS----------

@@ -171,6 +171,15 @@ void print_reverse_by_category_ui(t_product_ui *ui)
   print_reverse_by_category_ctrl(p, category);
 }
 
+void undo_ui(t_product_ui *ui)
+{
+  undo_c(ui->ctrl);
+}
+
+void redo_ui(t_product_ui *ui)
+{
+  redo_c(ui->ctrl);
+}
 
 void start_ui(t_product_ui *ui)
 {
@@ -198,5 +207,9 @@ void start_ui(t_product_ui *ui)
       print_reverse_by_category_ui(ui);
     if (!strcmp(command, "expires"))
       print_soon_to_expire(ui);
+    if (!strcmp(command, "undo"))
+      undo_ui(ui);
+    if (!strcmp(command, "redo"))
+      redo_ui(ui);
   }
 }

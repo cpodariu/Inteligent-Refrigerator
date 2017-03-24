@@ -9,7 +9,7 @@ void make_tests()
 
 int main()
 {
-  make_tests();
+  //make_tests();
 
   t_product_repo *repo = create_repo();
   t_product_ctrl *ctrl = create_ctrl(repo);

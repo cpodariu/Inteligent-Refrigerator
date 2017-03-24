@@ -35,11 +35,14 @@ void do_opr(t_opr *opr, t_product_repo *r)
   if (!strcmp(opr->cmd, "remove"))
   {
     add_product_r(r, create_product(opr->name, opr->category,
-    opr->quantity, opr->date.year, opr->date.month, opr->date.day));
+    opr->quantity, opr->date.year, opr->date.month, opr->date.day), 1);
+    strcpy(opr->cmd, "add");
   }
-  if (!strcmp(opr->cmd, "add"))
+  else if (!strcmp(opr->cmd, "add"))
   {
-    remove_product(r, opr->name);
+    printf("%s\n", opr->name);
+    remove_product(r, opr->name, 1);
+    strcpy(opr->cmd, "remove");
   }
 }
 
