@@ -38,10 +38,10 @@ void free_controller(t_product_ctrl *c)
  * @param year     int
  */
 void add_product_c  (t_product_ctrl *c, char* name, char* category,
-                    int quantity, int day, int month, int year)
+                    int quantity, int day, int month, int year, int is_update)
 {
   t_product *p = create_product(name, category, quantity, day, month, year);
-  add_product_r(c->repo, p, 0);
+  add_product_r(c->repo, p, 0, is_update);
   sort_repository(c);
 }
 
@@ -89,9 +89,9 @@ void sort_repository(t_product_ctrl *c)
  * @param  name The name of the product to be removed
  * @return      1- if the product was removed, 0 if it does not exist
  */
-int remove_product_c(t_product_ctrl *c, char *name)
+int remove_product_c(t_product_ctrl *c, char *name, int is_update)
 {
-  return remove_product(c->repo, name, 0);
+  return remove_product(c->repo, name, 0, is_update);
 }
 
 void print_reverse_by_category_ctrl(t_product *p, char *category)
@@ -126,7 +126,7 @@ void redo_c(t_product_ctrl *c)
 
 void init_controller_repo_test(t_product_ctrl *c)
 {
-  add_product_c(c, (char*)"Pear", (char*)"fruit", 3, 2, 3, 2015);
+  add_product_c(c, (char*)"Pear", (char*)"fruit", 3, 2, 3, 2015, 0);
 }
 
 void test_add_c()
@@ -136,7 +136,7 @@ void test_add_c()
 
   init_controller_repo_test(c);
   assert(get_length(c->repo) == 1);
-  add_product_c(c, (char*)"Apple", (char*)"fruit", 3, 2, 3, 2015);
+  add_product_c(c, (char*)"Apple", (char*)"fruit", 3, 2, 3, 2015, 0);
   assert(get_length(c->repo) == 2);
 }
 
@@ -146,7 +146,7 @@ void test_sort_repo()
   t_product_ctrl *c = create_ctrl(v);
 
   init_controller_repo_test(c);
-  add_product_c(c, (char*)"Apple", (char*)"fruit", 100, 2, 3, 2015);
+  add_product_c(c, (char*)"Apple", (char*)"fruit", 100, 2, 3, 2015, 0);
   sort_repository(c);
   assert(!strcmp(c->repo->products->name, "Pear"));
 }

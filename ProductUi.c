@@ -24,7 +24,7 @@ void add_product_ui(t_product_ui *ui)
   int year;
 
   scanf("%s%s%i%i%i%i", name, category, &quantity, &day, &month, &year);
-  add_product_c(ui->ctrl, name, category, quantity, day, month, year);
+  add_product_c(ui->ctrl, name, category, quantity, day, month, year, 0);
 }
 
 void print_menu()
@@ -33,6 +33,9 @@ void print_menu()
   printf("add name category quantity day month year\n");
   printf("remove name\n");
   printf("print\n");
+  printf("expires date category\n");
+  printf("magic category\n");
+  printf("undo/redo\n");
   printf("exit\n");
   printf("**********************************************************\n\n");
 }
@@ -81,6 +84,7 @@ void print_soon_to_expire(t_product_ui *ui)
       }
       p = p->next;
     }
+    printf("\n");
   }
 
   while(p != NULL)
@@ -138,7 +142,7 @@ void remove_product_ui(t_product_ui *ui)
   command[strcspn(command, "\r\n")] = 0;
   while(*command == ' ')
     command++;
-  if (remove_product_c(ui->ctrl, command) == 0)
+  if (remove_product_c(ui->ctrl, command, 0) == 0)
     printf("Product not in repository\n");
   //free(command);
 }
@@ -153,12 +157,12 @@ void update_ui(t_product_ui *ui)
   int year;
 
   scanf("%s%s%i%i%i%i", name, category, &quantity, &day, &month, &year);
-  if (remove_product_c(ui->ctrl, name) == 0)
+  if (remove_product_c(ui->ctrl, name, 1) == 0)
   {
     printf("Product not in repository\n");
     return ;
   }
-  add_product_c(ui->ctrl, name, category, quantity, day, month, year);
+  add_product_c(ui->ctrl, name, category, quantity, day, month, year, 1);
 }
 
 void print_reverse_by_category_ui(t_product_ui *ui)

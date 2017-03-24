@@ -10,10 +10,10 @@ typedef struct
 t_product_ctrl *create_ctrl(t_product_repo *r);
 void free_controller(t_product_ctrl *c);
 void add_product_c  (t_product_ctrl *c, char* name, char* category,
-                    int quantity, int day, int month, int year);
+                    int quantity, int day, int month, int year, int is_update);
 t_product_repo *get_repo(t_product_ctrl *c);
 void sort_repository(t_product_ctrl *c);
-int remove_product_c(t_product_ctrl *c, char *name);
+int remove_product_c(t_product_ctrl *c, char *name, int is_update);
 void init_controller_repo_test(t_product_ctrl *c);
 void test_add_c();
 void test_sort_repo();

@@ -11,7 +11,8 @@ int get_julian_date(t_date date)
   int y = date.year + 4800 - a;
   int m = date.month + 12 * a - 3;
 
-  return (date.day + (int)((153 * m + 2)/5) + 365 * y + (int)(y / 4) - (int)(y / 100) + (int)(y / 400) - 32045);
+  return (date.day + (int)((153 * m + 2)/5) + 365 * y + (int)(y / 4)
+  - (int)(y / 100) + (int)(y / 400) - 32045);
 }
 
 /**

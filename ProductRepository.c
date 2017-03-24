@@ -67,7 +67,7 @@ t_product *find(t_product_repo *v, char* name)
  * @param v the repo
  * @param p the product to be added
  */
-void add_product_r(t_product_repo *v, t_product *p, int control)
+void add_product_r(t_product_repo *v, t_product *p, int control, int is_update)
 {
     //static int test = 0;
   //  test++;
@@ -86,7 +86,7 @@ void add_product_r(t_product_repo *v, t_product *p, int control)
     if (control == 0)
     {
       t_opr *opr = init_opr();
-      add_opr(opr, p, "add");
+      add_opr(opr, p, "add", is_update);
       if (v->opr == NULL)
       {
         v->opr = opr;
@@ -141,7 +141,7 @@ int get_length(t_product_repo *v)
  * @param  name the name of the product to be removed
  * @return      1 - removed succesfully; 0 - product not found
  */
-int remove_product(t_product_repo *v, char* name, int control)
+int remove_product(t_product_repo *v, char* name, int control, int is_update)
 {
   t_product *p = v->products;
   t_product *aux;
@@ -153,7 +153,7 @@ int remove_product(t_product_repo *v, char* name, int control)
     if (control == 0)
     {
       t_opr *opr = init_opr();
-      add_opr(opr, p, "remove");
+      add_opr(opr, p, "remove", is_update);
       if (v->opr == NULL)
       {
         v->opr = opr;
@@ -190,7 +190,7 @@ int remove_product(t_product_repo *v, char* name, int control)
       if (control == 0)
       {
         t_opr *opr = init_opr();
-        add_opr(opr, aux, "remove");
+        add_opr(opr, aux, "remove", is_update);
         //printf("%s\n", aux->name);
         if (v->opr == NULL)
         {
@@ -223,21 +223,50 @@ int remove_product(t_product_repo *v, char* name, int control)
   return 0;
 }
 
+/**
+ * Undoes the lpo
+ * @param v the repository
+ */
 void undo(t_product_repo *v)
 {
   if (v->opr != NULL)
   {
-    do_opr(v->opr, v);
-    v->opr = v->opr->next;
+    if (v->opr->is_update == 0)
+    {
+      do_opr(v->opr, v);
+      v->opr = v->opr->next;
+    }
+    else
+    {
+      do_opr(v->opr, v);
+      do_opr(v->opr->next, v);
+      v->opr = v->opr->next->next;
+    //  printf("*");
+    }
   }
 }
 
+/**
+ * redoes lpo
+ * @param v the repository
+ */
 void redo(t_product_repo *v)
 {
   if (v->opr->prev != NULL)
   {
+    if (v->opr->prev->is_update == 0)
+    {
     do_opr(v->opr->prev, v);
     v->opr = v->opr->prev;
+    }
+    else
+    {
+      //printf("**\n");
+      do_opr(v->opr->prev, v);
+      do_opr(v->opr->prev->prev, v);
+      v->opr = v->opr->prev->prev;
+      printf("**\n");
+    }
   }
 }
 
@@ -246,7 +275,7 @@ void redo(t_product_repo *v)
 void init_product_repo_test(t_product_repo *v)
 {
     t_product *p = create_product((char*)"Milk", (char*)"dairy", 10, 25, 3, 2017);
-    add_product_r(v, p, 0);
+    add_product_r(v, p, 0, 0);
 }
 
 void test_add()
@@ -257,11 +286,11 @@ void test_add()
   assert(get_length(v) == 1);
 
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p, 0);
+  add_product_r(v, p, 0, 0);
   assert(get_length(v) == 2);
 
   p = create_product((char*)"Milk", (char*)"dairy", 5, 25, 3, 2017);
-  add_product_r(v, p, 0);
+  add_product_r(v, p, 0, 0);
   assert(get_length(v) == 2);
   assert(find(v, (char*)"Milk")->quantity == 15);
 
@@ -274,8 +303,8 @@ void test_remove()
 
   init_product_repo_test(v);
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p, 0);
-  remove_product(v, (char*)"Cheese", 0);
+  add_product_r(v, p, 0, 0);
+  remove_product(v, (char*)"Cheese", 0, 0);
   assert(get_length(v) == 1);
 }
 
@@ -285,7 +314,7 @@ void test_find()
 
   init_product_repo_test(v);
   t_product *p = create_product((char*)"Cheese", (char*)"dairy", 5, 22, 3, 2017);
-  add_product_r(v, p, 0);
+  add_product_r(v, p, 0, 0);
   assert(find(v, (char*)"Cheese")->quantity == 5);
 }
 
